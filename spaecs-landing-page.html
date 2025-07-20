@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spaecs - Gamified Communities for Modern Creators</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Transform your community into an addictive gaming experience. Gamify every interaction with XP, leaderboards, quests, and NFT rewards. Start your free trial today!">
+    <meta name="keywords" content="community platform, gamification, creator economy, NFT rewards, leaderboards, quests, engagement">
+    <meta name="author" content="Spaecs">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://spaecs.com/">
+    <meta property="og:title" content="Spaecs - Gamified Communities for Modern Creators">
+    <meta property="og:description" content="Transform your community into an addictive gaming experience with gamification features.">
+    <meta property="og:image" content="https://spaecs.com/og-image.jpg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://spaecs.com/">
+    <meta property="twitter:title" content="Spaecs - Gamified Communities for Modern Creators">
+    <meta property="twitter:description" content="Transform your community into an addictive gaming experience with gamification features.">
+    <meta property="twitter:image" content="https://spaecs.com/og-image.jpg">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <!-- External CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Progress Indicator -->
+    <div class="progress-indicator" id="progressBar"></div>
+
+    <!-- Header -->
+    <header id="header">
+        <nav>
+            <a href="#" class="logo">
+                <span></span> Spaecs
+            </a>
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="#features">Features</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#resources">Resources</a>
+                <a href="#" class="btn btn-primary" onclick="showNotification('Starting your free trial...')">Get Started</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Turn Your Community Into an <span class="typing-text" id="typingText">Hyper-Personalised Experience</span></h1>
+            <p class="subtitle">
+                The first platform that gamifies every interaction. Watch engagement 
+                skyrocket as your members level up, earn rewards, and compete for the top spot.
+            </p>
+            <form class="email-capture" id="emailForm">
+                <input type="email" class="email-input" placeholder="Enter your email" required aria-label="Email address">
+                <button type="submit" class="btn btn-primary" aria-label="Start free trial">Start Free Trial</button>
+            </form>
+            <div class="success-message" id="successMessage">
+                🎉 Welcome aboard! Check your email for next steps.
+            </div>
+            <div class="demo-trigger">
+                <button class="btn demo-btn" onclick="openDemo()">
+                    <span>🎮</span> See Live Demo
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Demo Modal -->
+    <div class="demo-modal" id="demoModal">
+        <div class="demo-content">
+            <span class="close-modal" onclick="closeDemo()">&times;</span>
+            <div class="game-preview">
+                <h3>Experience the Gamification</h3>
+                <p>Click the button to earn XP!</p>
+                <button class="btn btn-primary" onclick="earnXP()">Complete Quest (+50 XP)</button>
+                <div class="xp-bar">
+                    <div class="xp-progress" id="xpBar">0 / 200 XP</div>
+                </div>
+                <div class="level-up" id="levelUp">🎉 LEVEL UP! You're now Level 2!</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2 class="section-title">Everything You Need to Build an Epic Community</h2>
+            <p class="section-desc">
+                From quests to leaderboards, virtual currencies to NFT achievements. 
+                We've gamified every aspect of community engagement.
+            </p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card" onclick="showFeatureDetails('quest')">
+                <div class="feature-icon">🎯</div>
+                <h3 class="feature-title">Quest & Challenge System</h3>
+                <p class="feature-desc">
+                    Create daily, weekly, and special event quests. Members complete challenges, 
+                    earn XP, and unlock exclusive rewards automatically.
+                </p>
+                <a href="#" class="learn-more">Learn more →</a>
+            </div>
+            <div class="feature-card" onclick="showFeatureDetails('leaderboard')">
+                <div class="feature-icon">🏆</div>
+                <h3 class="feature-title">Real-time Leaderboards</h3>
+                <p class="feature-desc">
+                    Dynamic rankings that update instantly. Create competition with weekly, 
+                    monthly, or all-time leaderboards that keep members engaged.
+                </p>
+                <a href="#" class="learn-more">Learn more →</a>
+            </div>
+            <div class="feature-card" onclick="showFeatureDetails('nft')">
+                <div class="feature-icon">💎</div>
+                <h3 class="feature-title">NFT Achievement Badges</h3>
+                <p class="feature-desc">
+                    Rare digital badges that members can truly own. Limited editions, 
+                    special events, and tradeable achievements that hold real value.
+                </p>
+                <a href="#" class="learn-more">Learn more →</a>
+            </div>
+            <div class="feature-card" onclick="showFeatureDetails('economy')">
+                <div class="feature-icon">💰</div>
+                <h3 class="feature-title">Virtual Economy</h3>
+                <p class="feature-desc">
+                    Built-in currency system where members earn coins through activity 
+                    and spend on perks, tips, or exclusive content. You keep 95%.
+                </p>
+                <a href="#" class="learn-more">Learn more →</a>
+            </div>
+            <div class="feature-card" onclick="showFeatureDetails('analytics')">
+                <div class="feature-icon">📊</div>
+                <h3 class="feature-title">Engagement Analytics</h3>
+                <p class="feature-desc">
+                    Track what drives engagement. See which rewards work, optimize quests, 
+                    and understand exactly how to grow your community.
+                </p>
+                <a href="#" class="learn-more">Learn more →</a>
+            </div>
+            <div class="feature-card" onclick="showFeatureDetails('setup')">
+                <div class="feature-icon">🔧</div>
+                <h3 class="feature-title">5-Minute Setup</h3>
+                <p class="feature-desc">
+                    No coding required. Import your existing community, customize your 
+                    gamification rules, and watch the magic happen instantly.
+                </p>
+                <a href="#" class="learn-more">Learn more →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats" id="stats">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <h3><span class="stat-number" data-target="10">0</span>/10</h3>
+                <p>Gamification Score</p>
+            </div>
+            <div class="stat-item">
+                <h3><span class="stat-number" data-target="5">0</span>%</h3>
+                <p>Transaction Fee</p>
+            </div>
+            <div class="stat-item">
+                <h3>$<span class="stat-number" data-target="9.99">0</span></h3>
+                <p>Starting Price</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Comparison Section -->
+    <section class="comparison">
+        <div class="section-header">
+            <h2 class="section-title">Why Creators Choose Spaecs</h2>
+            <p class="section-desc">
+                See how we stack up against the competition. More features, better pricing, 
+                and the gamification your community craves.
+            </p>
+        </div>
+        <div class="comparison-toggle">
+            <button class="toggle-btn active" onclick="showComparison('features', event)">Features</button>
+            <button class="toggle-btn" onclick="showComparison('pricing', event)">Pricing</button>
+            <button class="toggle-btn" onclick="showComparison('support', event)">Support</button>
+        </div>
+        <div class="comparison-table" id="comparisonTable">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th class="highlight">Spaecs</th>
+                        <th>Discord</th>
+                        <th>Circle</th>
+                        <th>Whop</th>
+                    </tr>
+                </thead>
+                <tbody id="comparisonBody">
+                    <tr>
+                        <td>XP & Leveling System</td>
+                        <td><span class="check">✓</span></td>
+                        <td><span class="cross">✗</span></td>
+                        <td><span class="cross">✗</span></td>
+                        <td><span class="cross">✗</span></td>
+                    </tr>
+                    <tr>
+                        <td>Dynamic Leaderboards</td>
+                        <td><span class="check">✓</span></td>
+                        <td><span class="cross">✗</span></td>
+                        <td><span class="cross">✗</span></td>
+                        <td><span class="cross">✗</span></td>
+                    </tr>
+                    <tr>
+                        <td>Quest System</td>
+                        <td><span class="check">✓</span></td>
+                        <td><span class="cross">✗</span></td>
+                        <td><span class="cross">✗</span></td>
+                        <td><span class="cross">✗</span></td>
+                    </tr>
+                    <tr>
+                        <td>Built-in Monetization</td>
+                        <td><span class="check">✓</span></td>
+                        <td><span class="cross">✗</span></td>
+                        <td><span class="check">✓</span></td>
+                        <td><span class="check">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td>NFT Rewards</td>
+                        <td><span class="check">✓</span></td>
+                        <td><span class="cross">✗</span></td>
+                        <td><span class="cross">✗</span></td>
+                        <td><span class="cross">✗</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="section-header">
+            <h2 class="section-title">Creators Love Spaecs</h2>
+            <p class="section-desc">
+                Join thousands of creators who've transformed their communities 
+                into thriving, engaged ecosystems.
+            </p>
+        </div>
+        <div class="testimonials-slider">
+            <div class="testimonials-track" id="testimonialsTrack">
+                <div class="testimonial-card">
+                    <div class="rating">★★★★★</div>
+                    <p class="testimonial-text">
+                        "My Discord was dead. After switching to Spaecs, daily active users 
+                        increased 400%. The gamification features are addictive!"
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">AK</div>
+                        <div class="author-info">
+                            <h4>Alex Kim</h4>
+                            <p>Gaming Creator</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="rating">★★★★★</div>
+                    <p class="testimonial-text">
+                        "Finally, a platform that gets it. My members compete daily on 
+                        leaderboards and engagement is through the roof."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">SR</div>
+                        <div class="author-info">
+                            <h4>Sarah Rodriguez</h4>
+                            <p>Fitness Coach</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="rating">★★★★★</div>
+                    <p class="testimonial-text">
+                        "The NFT rewards system is genius. My top members feel truly 
+                        special with their exclusive badges."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">MJ</div>
+                        <div class="author-info">
+                            <h4>Marcus Johnson</h4>
+                            <p>Web3 Educator</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slider-controls">
+                <button class="slider-btn" onclick="slideTestimonial(-1)">←</button>
+                <button class="slider-btn" onclick="slideTestimonial(1)">→</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="cta-content">
+            <h2>Ready to Level Up Your Community?</h2>
+            <p class="subtitle">
+                Join the revolution. Transform your community into an engaging, 
+                rewarding experience that members can't resist.
+            </p>
+            <div class="cta-buttons">
+                <a href="#" class="btn btn-primary" onclick="showNotification('Starting your free trial...')">Start Free Trial</a>
+                <a href="#" class="btn btn-secondary" onclick="openCalendar()">Book a Demo</a>
+            </div>
+            
+            <!-- ROI Calculator -->
+            <div class="roi-calculator">
+                <h3 class="calculator-title">Calculate Your Potential Revenue</h3>
+                <input type="number" class="calculator-input" id="memberCount" placeholder="Number of members" onkeyup="calculateROI()">
+                <input type="number" class="calculator-input" id="avgPrice" placeholder="Average membership price ($)" onkeyup="calculateROI()">
+                <div class="calculator-results" id="calculatorResults">
+                    <div class="result-item">
+                        <span>Monthly Revenue:</span>
+                        <span class="result-value" id="monthlyRevenue">$0</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Your Earnings (95%):</span>
+                        <span class="result-value" id="yourEarnings">$0</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Yearly Earnings:</span>
+                        <span class="result-value" id="yearlyEarnings">$0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <p style="margin-top: 1.5rem; color: var(--text-gray); font-size: 0.875rem;">
+                Free for up to 100 members • No credit card required • 2-minute setup
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Support</a>
+            <a href="#">Blog</a>
+        </div>
+        <p>© 2025 Spaecs. All rights reserved.</p>
+    </footer>
+
+    <!-- External JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
