@@ -6,7 +6,7 @@
     <title>Spaecs - Gamified Communities for Modern Creators</title>
     
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Transform your community into an addictive gaming experience. Gamify every interaction with XP, leaderboards, quests, and NFT rewards. Start your free trial today!">
+    <meta name="description" content="Transform your community into an addictive gaming experience. Gamify every interaction with XP, leaderboards, quests, and NFT rewards. Join the waitlist today!">
     <meta name="keywords" content="community platform, gamification, creator economy, NFT rewards, leaderboards, quests, engagement">
     <meta name="author" content="Spaecs">
     
@@ -49,7 +49,7 @@
                 <a href="#features">Features</a>
                 <a href="#pricing">Pricing</a>
                 <a href="#resources">Resources</a>
-                <a href="#" class="btn btn-primary" onclick="showNotification('Starting your free trial...')">Get Started</a>
+                <a href="#" class="btn btn-primary" onclick="showNotification('Joining waitlist...')">Join Waitlist</a>
             </div>
         </nav>
     </header>
@@ -64,34 +64,16 @@
             </p>
             <form class="email-capture" id="emailForm">
                 <input type="email" class="email-input" placeholder="Enter your email" required aria-label="Email address">
-                <button type="submit" class="btn btn-primary" aria-label="Start free trial">Start Free Trial</button>
+                <button type="submit" class="btn btn-primary" aria-label="Join waitlist">Join Waitlist</button>
             </form>
             <div class="success-message" id="successMessage">
-                🎉 Welcome aboard! Check your email for next steps.
+                🎉 You're on the waitlist! We'll notify you when we launch.
             </div>
-            <div class="demo-trigger">
-                <button class="btn demo-btn" onclick="openDemo()">
-                    <span>🎮</span> See Live Demo
-                </button>
-            </div>
+
         </div>
     </section>
 
-    <!-- Live Demo Modal -->
-    <div class="demo-modal" id="demoModal">
-        <div class="demo-content">
-            <span class="close-modal" onclick="closeDemo()">&times;</span>
-            <div class="game-preview">
-                <h3>Experience the Gamification</h3>
-                <p>Click the button to earn XP!</p>
-                <button class="btn btn-primary" onclick="earnXP()">Complete Quest (+50 XP)</button>
-                <div class="xp-bar">
-                    <div class="xp-progress" id="xpBar">0 / 200 XP</div>
-                </div>
-                <div class="level-up" id="levelUp">🎉 LEVEL UP! You're now Level 2!</div>
-            </div>
-        </div>
-    </div>
+
 
     <!-- Features Section -->
     <section class="features" id="features">
@@ -103,7 +85,7 @@
             </p>
         </div>
         <div class="features-grid">
-            <div class="feature-card" onclick="showFeatureDetails('quest')">
+            <div class="feature-card">
                 <div class="feature-icon">🎯</div>
                 <h3 class="feature-title">Quest & Challenge System</h3>
                 <p class="feature-desc">
@@ -112,7 +94,7 @@
                 </p>
                 <a href="#" class="learn-more">Learn more →</a>
             </div>
-            <div class="feature-card" onclick="showFeatureDetails('leaderboard')">
+            <div class="feature-card">
                 <div class="feature-icon">🏆</div>
                 <h3 class="feature-title">Real-time Leaderboards</h3>
                 <p class="feature-desc">
@@ -121,7 +103,7 @@
                 </p>
                 <a href="#" class="learn-more">Learn more →</a>
             </div>
-            <div class="feature-card" onclick="showFeatureDetails('nft')">
+            <div class="feature-card">
                 <div class="feature-icon">💎</div>
                 <h3 class="feature-title">NFT Achievement Badges</h3>
                 <p class="feature-desc">
@@ -130,7 +112,7 @@
                 </p>
                 <a href="#" class="learn-more">Learn more →</a>
             </div>
-            <div class="feature-card" onclick="showFeatureDetails('economy')">
+            <div class="feature-card">
                 <div class="feature-icon">💰</div>
                 <h3 class="feature-title">Virtual Economy</h3>
                 <p class="feature-desc">
@@ -139,7 +121,7 @@
                 </p>
                 <a href="#" class="learn-more">Learn more →</a>
             </div>
-            <div class="feature-card" onclick="showFeatureDetails('analytics')">
+            <div class="feature-card">
                 <div class="feature-icon">📊</div>
                 <h3 class="feature-title">Engagement Analytics</h3>
                 <p class="feature-desc">
@@ -148,7 +130,7 @@
                 </p>
                 <a href="#" class="learn-more">Learn more →</a>
             </div>
-            <div class="feature-card" onclick="showFeatureDetails('setup')">
+            <div class="feature-card">
                 <div class="feature-icon">🔧</div>
                 <h3 class="feature-title">5-Minute Setup</h3>
                 <p class="feature-desc">
@@ -189,9 +171,9 @@
             </p>
         </div>
         <div class="comparison-toggle">
-            <button class="toggle-btn active" onclick="showComparison('features', event)">Features</button>
-            <button class="toggle-btn" onclick="showComparison('pricing', event)">Pricing</button>
-            <button class="toggle-btn" onclick="showComparison('support', event)">Support</button>
+            <button class="toggle-btn active">Features</button>
+            <button class="toggle-btn">Pricing</button>
+            <button class="toggle-btn">Support</button>
         </div>
         <div class="comparison-table" id="comparisonTable">
             <table>
@@ -300,8 +282,8 @@
                 </div>
             </div>
             <div class="slider-controls">
-                <button class="slider-btn" onclick="slideTestimonial(-1)">←</button>
-                <button class="slider-btn" onclick="slideTestimonial(1)">→</button>
+                <button class="slider-btn">←</button>
+                <button class="slider-btn">→</button>
             </div>
         </div>
     </section>
@@ -315,8 +297,8 @@
                 rewarding experience that members can't resist.
             </p>
             <div class="cta-buttons">
-                <a href="#" class="btn btn-primary" onclick="showNotification('Starting your free trial...')">Start Free Trial</a>
-                <a href="#" class="btn btn-secondary" onclick="openCalendar()">Book a Demo</a>
+                <a href="#" class="btn btn-primary" onclick="showNotification('Joining waitlist...')">Join Waitlist</a>
+                <a href="#" class="btn btn-secondary">Book a Demo</a>
             </div>
             
             <!-- ROI Calculator -->
@@ -359,5 +341,6 @@
 
     <!-- External JavaScript -->
     <script src="script.js"></script>
+    <script src="event-handlers.js"></script>
 </body>
 </html>

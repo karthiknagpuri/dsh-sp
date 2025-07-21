@@ -1,4 +1,32 @@
 // Script.js - Updated: ${new Date().toISOString()}
+
+// Global error handler
+window.addEventListener('unhandledrejection', event => {
+    console.error('Unhandled promise rejection:', event.reason);
+    event.preventDefault();
+});
+
+// Safe element selector with fallback
+function safeGetElement(selector, context = document) {
+    try {
+        return context.querySelector(selector) || context.getElementById(selector);
+    } catch (e) {
+        console.warn(`Failed to find element: ${selector}`);
+        return null;
+    }
+}
+
+// Safe function wrapper to prevent errors from breaking the entire script
+function safeFn(fn, fallback = () => {}) {
+    return function(...args) {
+        try {
+            return fn.apply(this, args);
+        } catch (error) {
+            console.error('Function error:', error);
+            return fallback.apply(this, args);
+        }
+    };
+}
 // Typing Effect
 const typingWords = ['Addictive Experience', 'Gaming Platform', 'Reward System', 'Community Hub'];
 let wordIndex = 0;
@@ -7,6 +35,12 @@ let isDeleting = false;
 const typingElement = document.getElementById('typingText');
 
 function typeEffect() {
+    // Check if required elements exist
+    if (!typingElement || !typingWords || typingWords.length === 0) {
+        console.warn('TypeEffect: Required elements not found');
+        return;
+    }
+    
     const currentWord = typingWords[wordIndex];
     
     if (isDeleting) {
@@ -33,23 +67,29 @@ function typeEffect() {
 const menuToggle = document.getElementById('menuToggle');
 const navLinks = document.getElementById('navLinks');
 
-menuToggle.addEventListener('click', () => {
-    menuToggle.classList.toggle('active');
-    navLinks.classList.toggle('active');
-});
+if (menuToggle && navLinks) {
+    menuToggle.addEventListener('click', () => {
+        menuToggle.classList.toggle('active');
+        navLinks.classList.toggle('active');
+    });
+}
 
 // Scroll Progress Bar
 window.addEventListener('scroll', () => {
     const scrollTop = window.pageYOffset;
     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
     const scrollPercent = (scrollTop / docHeight) * 100;
-    document.getElementById('progressBar').style.width = scrollPercent + '%';
+    
+    const progressBar = document.getElementById('progressBar');
+    if (progressBar) {
+        progressBar.style.width = scrollPercent + '%';
+    }
 
     // Header scroll effect
     const header = document.getElementById('header');
-    if (scrollTop > 50) {
+    if (header && scrollTop > 50) {
         header.classList.add('scrolled');
-    } else {
+    } else if (header) {
         header.classList.remove('scrolled');
     }
 });
@@ -58,17 +98,13 @@ window.addEventListener('scroll', () => {
 const emailForm = document.getElementById('emailForm');
 const emailInput = document.querySelector('.email-input');
 
-// Check if elements exist before adding event listeners
-if (!emailForm || !emailInput) {
-    console.error('Email form elements not found');
-}
 
 function validateEmail(email) {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
 }
 
-if (emailForm) {
+if (emailForm && emailInput) {
     emailForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const email = emailInput.value.trim();
@@ -93,8 +129,11 @@ if (emailForm) {
     
     // Simulate API call
     setTimeout(() => {
-        document.getElementById('successMessage').style.display = 'block';
-        emailForm.style.display = 'none';
+        const successMessage = document.getElementById('successMessage');
+        if (successMessage) {
+            successMessage.style.display = 'block';
+            emailForm.style.display = 'none';
+        }
         showNotification('Welcome! Check your email for next steps.', 'success');
         submitBtn.textContent = originalText;
         submitBtn.disabled = false;
@@ -212,7 +251,6 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-observer.observe(document.getElementById('stats'));
 
 // Comparison Toggle
 function showComparison(type, event) {
@@ -355,8 +393,6 @@ function slideTestimonial(direction) {
     track.style.transform = `translateX(-${currentSlide * 100}%)`;
 }
 
-// Auto-slide testimonials
-setInterval(() => slideTestimonial(1), 5000);
 
 // ROI Calculator with Validation
 function calculateROI() {
@@ -480,7 +516,7 @@ if (savedEmail && emailInput) {
 }
 
 // Save email when form is submitted
-if (emailForm) {
+if (emailForm && emailInput) {
     emailForm.addEventListener('submit', () => {
         const email = emailInput.value.trim();
         if (email) {
@@ -514,7 +550,10 @@ window.addEventListener('offline', () => {
 // Error handling for failed operations
 window.addEventListener('error', (e) => {
     console.error('JavaScript error:', e.error);
-    showNotification('Something went wrong. Please try again.', 'error');
+    // Only show notification for critical errors, not null reference errors
+    if (e.error && !e.error.message.includes('null') && !e.error.message.includes('undefined')) {
+        showNotification('Something went wrong. Please try again.', 'error');
+    }
 });
 
 // Prevent form resubmission
@@ -524,6 +563,128 @@ if (window.history.replaceState) {
 
 // Initialize typing effect when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    typeEffect();
     console.log('Script loaded successfully - version:', Date.now());
-}); 
+    
+    // Detect which page we're on and initialize accordingly
+    const isResourcesPage = window.location.pathname.includes('resources.html');
+    const isIndexPage = window.location.pathname.includes('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/');
+    
+    if (isIndexPage) {
+        initializeIndexPage();
+    } else if (isResourcesPage) {
+        initializeResourcesPage();
+    }
+});
+
+// Resources page functionality
+function initializeResourcesPage() {
+    console.log('Initializing resources page...');
+    
+    // Check if we're on the resources page
+    const sidebar = document.getElementById('sidebar');
+    if (!sidebar) {
+        console.log('Not on resources page - sidebar not found');
+        return;
+    }
+    
+    console.log('Resources page detected, setting up functionality...');
+    
+    // Mobile menu toggle
+    function toggleSidebar() {
+        sidebar.classList.toggle('open');
+    }
+    
+    // Navigation item click handling
+    const navItems = document.querySelectorAll('.nav-item');
+    console.log('Found nav items:', navItems.length);
+    
+    navItems.forEach(item => {
+        item.addEventListener('click', function() {
+            console.log('Nav item clicked:', this.textContent.trim());
+            // Remove active class from all items
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            // Add active class to clicked item
+            this.classList.add('active');
+        });
+    });
+    
+    // Resource card click handling
+    const resourceCards = document.querySelectorAll('.resource-card');
+    console.log('Found resource cards:', resourceCards.length);
+    
+    resourceCards.forEach(card => {
+        card.addEventListener('click', function() {
+            console.log('Resource card clicked');
+            // Add click animation
+            this.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+        });
+    });
+    
+    // Add resource button click
+    const addResourceBtn = document.querySelector('.add-resource-btn');
+    if (addResourceBtn) {
+        console.log('Add resource button found');
+        addResourceBtn.addEventListener('click', function() {
+            console.log('Add resource button clicked');
+            showNotification('Add Resource functionality coming soon!');
+        });
+    } else {
+        console.log('Add resource button not found');
+    }
+    
+    // Add navigation links
+    addNavigationLinks();
+    
+    console.log('Resources page initialization complete');
+}
+
+// Initialize index page specific functionality
+function initializeIndexPage() {
+    console.log('Initializing index page...');
+    
+    // Initialize typing effect
+    if (document.querySelector('.typing-text')) {
+        typeEffect();
+    }
+    
+    // Initialize stats observer
+    const statsElement = document.getElementById('stats');
+    if (statsElement) {
+        observer.observe(statsElement);
+    }
+    
+    // Initialize testimonial slider auto-slide
+    if (document.querySelectorAll('.testimonial-card').length > 0) {
+        setInterval(() => slideTestimonial(1), 5000);
+    }
+    
+    // Add link to resources page in main navigation
+    const navLinks = document.querySelector('.nav-links');
+    if (navLinks) {
+        const resourcesLink = navLinks.querySelector('a[href="#resources"]');
+        if (resourcesLink) {
+            resourcesLink.href = 'resources.html';
+            resourcesLink.textContent = 'Resources';
+        }
+    }
+    
+    console.log('Index page initialization complete');
+}
+
+// Add navigation links between pages
+function addNavigationLinks() {
+    // Add link to home page in resources sidebar
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) {
+        const spaecsHeader = sidebar.querySelector('.sidebar-header h2');
+        if (spaecsHeader) {
+            spaecsHeader.style.cursor = 'pointer';
+            spaecsHeader.addEventListener('click', () => {
+                window.location.href = 'index.html';
+            });
+        }
+    }
+} 
