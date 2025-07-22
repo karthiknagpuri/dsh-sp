@@ -127,89 +127,58 @@ if (emailForm && emailInput) {
     submitBtn.textContent = 'Submitting...';
     submitBtn.disabled = true;
     
-    // Simulate API call
-    setTimeout(() => {
-        const successMessage = document.getElementById('successMessage');
-        if (successMessage) {
-            successMessage.style.display = 'block';
-            emailForm.style.display = 'none';
-        }
-        showNotification('Welcome! Check your email for next steps.', 'success');
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
-    }, 1500);
+    // Add to Supabase waitlist
+    if (window.supabaseHelpers) {
+        window.supabaseHelpers.addToWaitlist(email).then(result => {
+            if (result.success) {
+                const successMessage = document.getElementById('successMessage');
+                if (successMessage) {
+                    successMessage.style.display = 'block';
+                    emailForm.style.display = 'none';
+                }
+                showNotification('Welcome! Check your email for next steps.', 'success');
+                
+                // Clear the form
+                emailInput.value = '';
+            } else {
+                showNotification('Something went wrong. Please try again.', 'error');
+            }
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        }).catch(error => {
+            console.error('Waitlist submission error:', error);
+            showNotification('Something went wrong. Please try again.', 'error');
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        });
+    } else {
+        // Fallback if Supabase is not available
+        setTimeout(() => {
+            const successMessage = document.getElementById('successMessage');
+            if (successMessage) {
+                successMessage.style.display = 'block';
+                emailForm.style.display = 'none';
+            }
+            showNotification('Welcome! Check your email for next steps.', 'success');
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        }, 1500);
+    }
     });
 }
 
-// Demo Modal
+// Demo Modal - Removed (modal no longer exists)
 function openDemo() {
-    const modal = document.getElementById('demoModal');
-    if (!modal) {
-        console.error('demoModal element not found');
-        return;
-    }
-    modal.style.display = 'flex';
-    modal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-    
-    // Focus trap for accessibility
-    const closeBtn = modal.querySelector('.close-modal');
-    if (closeBtn) {
-        closeBtn.focus();
-    }
+    showNotification('Demo coming soon! Sign up to get early access.');
 }
 
 function closeDemo() {
-    const modal = document.getElementById('demoModal');
-    if (!modal) {
-        console.error('demoModal element not found');
-        return;
-    }
-    modal.style.display = 'none';
-    modal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = 'auto';
+    // No longer needed
 }
 
-// Close modal with Escape key
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        const modal = document.getElementById('demoModal');
-        if (modal && modal.style.display === 'flex') {
-            closeDemo();
-        }
-    }
-});
-
-// XP System Demo
-let currentXP = 0;
-let level = 1;
-
+// XP System Demo - Removed (was part of demo modal)
 function earnXP() {
-    currentXP += 50;
-    const xpBar = document.getElementById('xpBar');
-    const levelUp = document.getElementById('levelUp');
-    
-    if (!xpBar || !levelUp) {
-        console.error('XP elements not found');
-        return;
-    }
-    
-    if (currentXP >= 200) {
-        currentXP = 0;
-        level++;
-        xpBar.style.width = '100%';
-        xpBar.textContent = '200 / 200 XP';
-        levelUp.style.display = 'block';
-        setTimeout(() => {
-            xpBar.style.width = '0%';
-            xpBar.textContent = '0 / 200 XP';
-            levelUp.style.display = 'none';
-        }, 2000);
-    } else {
-        const percent = (currentXP / 200) * 100;
-        xpBar.style.width = percent + '%';
-        xpBar.textContent = currentXP + ' / 200 XP';
-    }
+    showNotification('+50 XP! Sign up to start earning real XP.');
 }
 
 // Count Up Animation with Performance Optimization
@@ -253,10 +222,12 @@ const observer = new IntersectionObserver((entries) => {
 
 
 // Comparison Toggle
-function showComparison(type, event) {
+window.showComparison = function(type, event) {
     const buttons = document.querySelectorAll('.toggle-btn');
     buttons.forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
+    if (event && event.target) {
+        event.target.classList.add('active');
+    }
 
     const tbody = document.getElementById('comparisonBody');
     if (!tbody) {
@@ -372,7 +343,7 @@ function showComparison(type, event) {
 }
 
 // Feature Details
-function showFeatureDetails(feature) {
+window.showFeatureDetails = function(feature) {
     showNotification(`Learn more about ${feature} features coming soon!`);
 }
 
@@ -380,7 +351,7 @@ function showFeatureDetails(feature) {
 let currentSlide = 0;
 const testimonials = document.querySelectorAll('.testimonial-card');
 
-function slideTestimonial(direction) {
+window.slideTestimonial = function(direction) {
     currentSlide += direction;
     if (currentSlide < 0) currentSlide = testimonials.length - 1;
     if (currentSlide >= testimonials.length) currentSlide = 0;
@@ -395,7 +366,7 @@ function slideTestimonial(direction) {
 
 
 // ROI Calculator with Validation
-function calculateROI() {
+window.calculateROI = function() {
     const memberCountEl = document.getElementById('memberCount');
     const avgPriceEl = document.getElementById('avgPrice');
     const calculatorResults = document.getElementById('calculatorResults');
@@ -440,7 +411,7 @@ function calculateROI() {
 }
 
 // Notification System
-function showNotification(message, type = 'info') {
+window.showNotification = function(message, type = 'info') {
     const notification = document.getElementById('notification');
     if (!notification) {
         console.error('notification element not found');
@@ -472,8 +443,8 @@ function scrollToTop() {
 }
 
 // Calendar Demo
-function openCalendar() {
-    showNotification('Calendar integration coming soon!');
+window.openCalendar = function() {
+    showNotification('Calendar integration coming soon! Sign up to get notified.');
 }
 
 // Add smooth scrolling for anchor links
@@ -493,6 +464,14 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 // Save user preferences
 function saveUserPreference(key, value) {
     try {
+        // Try to save to Supabase first if available
+        if (window.supabaseHelpers && window.supabase) {
+            // Generate a simple user ID from email or create anonymous ID
+            const userId = getUserPreference('email') || 'anonymous_' + Date.now();
+            window.supabaseHelpers.saveUserPreference(userId, key, value);
+        }
+        
+        // Also save to localStorage as fallback
         localStorage.setItem(`spaecs_${key}`, JSON.stringify(value));
     } catch (e) {
         console.warn('Could not save preference:', e);
@@ -501,8 +480,28 @@ function saveUserPreference(key, value) {
 
 function getUserPreference(key, defaultValue = null) {
     try {
+        // Try to get from localStorage first (faster)
         const stored = localStorage.getItem(`spaecs_${key}`);
-        return stored ? JSON.parse(stored) : defaultValue;
+        if (stored) {
+            return JSON.parse(stored);
+        }
+        
+        // If not in localStorage and Supabase is available, try to get from there
+        if (window.supabaseHelpers && window.supabase) {
+            const userId = getUserPreference('email') || 'anonymous_' + Date.now();
+            window.supabaseHelpers.getUserPreferences(userId).then(result => {
+                if (result.success && result.data) {
+                    const preference = result.data.find(p => p.preference_key === key);
+                    if (preference) {
+                        // Cache in localStorage for future use
+                        localStorage.setItem(`spaecs_${key}`, preference.preference_value);
+                        return JSON.parse(preference.preference_value);
+                    }
+                }
+            });
+        }
+        
+        return defaultValue;
     } catch (e) {
         console.warn('Could not load preference:', e);
         return defaultValue;

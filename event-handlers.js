@@ -1,12 +1,10 @@
 // Event handlers initialization
 document.addEventListener('DOMContentLoaded', () => {
-    // Get Started button
-    const getStartedBtn = document.querySelector('.nav-links .btn-primary');
-    if (getStartedBtn) {
-        getStartedBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            showNotification('Joining waitlist...');
-        });
+    // Sign In button - Updated for Clerk
+    const signInBtn = document.querySelector('.sign-in-btn');
+    if (signInBtn) {
+        // Remove the onclick handler since it's now inline
+        // The button already has onclick="clerkAuth.handleSignIn()"
     }
 
     // Demo button
@@ -54,14 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (prevSlideBtn) prevSlideBtn.addEventListener('click', () => slideTestimonial(-1));
     if (nextSlideBtn) nextSlideBtn.addEventListener('click', () => slideTestimonial(1));
 
-    // CTA buttons
-    const ctaButtons = document.querySelectorAll('.cta .btn-primary');
-    ctaButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            showNotification('Joining waitlist...');
-        });
-    });
+    // CTA buttons - Updated for Clerk
+    // These buttons now use inline onclick handlers
 
     const bookDemoBtn = document.querySelector('.cta .btn-secondary');
     if (bookDemoBtn) {

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Spaecs</title>
+    
+    <!-- External CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="clerk-styles.css">
+    
+    <!-- Clerk Script -->
+    <script src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="auth-page">
+        <div class="auth-container">
+            <div class="auth-header">
+                <a href="/" class="logo">
+                    <span>🎮</span> Spaecs
+                </a>
+                <h1>Welcome Back!</h1>
+                <p>Sign in to continue to your gamified community</p>
+            </div>
+            
+            <div id="clerk-sign-in"></div>
+            
+            <div class="auth-footer">
+                <p>Don't have an account? <a href="sign-up.html">Sign up</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Clerk and mount sign-in component
+        window.addEventListener('load', async () => {
+            if (typeof window.Clerk === 'undefined') {
+                console.error('Clerk not loaded');
+                return;
+            }
+
+            try {
+                await window.Clerk.load({
+                    publishableKey: 'pk_test_cmVndWxhci1yYWNjb29uLTMuY2xlcmsuYWNjb3VudHMuZGV2JA'
+                });
+
+                // Mount sign-in component
+                const signInDiv = document.getElementById('clerk-sign-in');
+                window.Clerk.mountSignIn(signInDiv, {
+                    redirectUrl: '/dashboard.html',
+                    appearance: {
+                        baseTheme: 'light',
+                        variables: {
+                            colorPrimary: '#1a4d3a',
+                            colorBackground: '#ffffff',
+                            colorText: '#0a0f0d',
+                            colorInputBackground: '#f8faf9',
+                            colorInputText: '#0a0f0d',
+                            borderRadius: '8px',
+                            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+                        },
+                        elements: {
+                            card: {
+                                boxShadow: 'none',
+                                border: 'none',
+                                padding: '0'
+                            },
+                            headerTitle: {
+                                display: 'none'
+                            },
+                            headerSubtitle: {
+                                display: 'none'
+                            },
+                            formButtonPrimary: {
+                                backgroundColor: '#1a4d3a',
+                                '&:hover': {
+                                    backgroundColor: '#0f2e22'
+                                }
+                            },
+                            footerActionLink: {
+                                color: '#1a4d3a',
+                                fontWeight: '600'
+                            },
+                            identityPreviewText: {
+                                fontWeight: '500'
+                            },
+                            formFieldInput: {
+                                borderColor: '#e5e5e5',
+                                '&:focus': {
+                                    borderColor: '#1a4d3a',
+                                    boxShadow: '0 0 0 3px rgba(26, 77, 58, 0.1)'
+                                }
+                            },
+                            socialButtonsBlockButton: {
+                                borderColor: '#e5e5e5',
+                                '&:hover': {
+                                    backgroundColor: '#f8faf9',
+                                    borderColor: '#1a4d3a'
+                                }
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading Clerk:', error);
+            }
+        });
+    </script>
+</body>
+</html>

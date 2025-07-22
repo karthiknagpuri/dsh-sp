@@ -29,8 +29,15 @@
     
     <!-- External CSS -->
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="clerk-styles.css">
+    
+    <!-- Clerk Script -->
+    <script src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js" crossorigin="anonymous"></script>
 </head>
 <body>
+    <!-- Notification System -->
+    <div id="notification" class="notification"></div>
+    
     <!-- Progress Indicator -->
     <div class="progress-indicator" id="progressBar"></div>
 
@@ -49,7 +56,8 @@
                 <a href="#features">Features</a>
                 <a href="#pricing">Pricing</a>
                 <a href="#resources">Resources</a>
-                <a href="#" class="btn btn-primary" onclick="showNotification('Joining waitlist...')">Join Waitlist</a>
+                <div id="userMenuContainer"></div>
+                <a href="#" class="btn btn-primary sign-in-btn" onclick="clerkAuth.handleSignIn()">Sign In</a>
             </div>
         </nav>
     </header>
@@ -69,7 +77,6 @@
             <div class="success-message" id="successMessage">
                 🎉 You're on the waitlist! We'll notify you when we launch.
             </div>
-
         </div>
     </section>
 
@@ -297,8 +304,8 @@
                 rewarding experience that members can't resist.
             </p>
             <div class="cta-buttons">
-                <a href="#" class="btn btn-primary" onclick="showNotification('Joining waitlist...')">Join Waitlist</a>
-                <a href="#" class="btn btn-secondary">Book a Demo</a>
+                <a href="#" class="btn btn-primary" onclick="clerkAuth.handleSignUp()">Join Waitlist</a>
+                <a href="#" class="btn btn-secondary" onclick="openCalendar()">Book a Demo</a>
             </div>
             
             <!-- ROI Calculator -->
@@ -340,6 +347,13 @@
     </footer>
 
     <!-- External JavaScript -->
+    <!-- Supabase Client Library -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <!-- Supabase Configuration -->
+    <script src="supabase-config.js"></script>
+    <!-- Clerk Configuration -->
+    <script src="clerk-config.js"></script>
+    <!-- Main Scripts -->
     <script src="script.js"></script>
     <script src="event-handlers.js"></script>
 </body>

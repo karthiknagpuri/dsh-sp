@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Spaecs</title>
+    
+    <!-- External CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="clerk-styles.css">
+    
+    <!-- Clerk Script -->
+    <script src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <!-- Loading State -->
+    <div id="loadingState" class="auth-loading">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Dashboard (hidden initially) -->
+    <div id="dashboard" style="display: none;">
+        <header class="dashboard-header">
+            <nav class="dashboard-nav">
+                <a href="/" class="logo">
+                    <span>🎮</span> Spaecs
+                </a>
+                <div id="userMenuContainer"></div>
+            </nav>
+        </header>
+
+        <main class="dashboard-content">
+            <div id="welcomeMessage"></div>
+            
+            <div class="dashboard-grid">
+                <!-- Profile Section -->
+                <div class="dashboard-card">
+                    <h2>Your Profile</h2>
+                    <div id="profileInfo">Loading profile...</div>
+                </div>
+
+                <!-- Community Stats -->
+                <div class="dashboard-card">
+                    <h2>Community Stats</h2>
+                    <div class="stats-preview">
+                        <div class="stat-item">
+                            <span class="stat-value">0</span>
+                            <span class="stat-label">Members</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">0</span>
+                            <span class="stat-label">XP Earned</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">0</span>
+                            <span class="stat-label">Quests</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="dashboard-card">
+                    <h2>Quick Actions</h2>
+                    <div class="quick-actions">
+                        <button class="btn btn-primary">Create Community</button>
+                        <button class="btn btn-secondary">Invite Members</button>
+                        <button class="btn btn-secondary">View Analytics</button>
+                    </div>
+                </div>
+
+                <!-- Waitlist Status -->
+                <div class="dashboard-card full-width">
+                    <h2>Waitlist Status</h2>
+                    <div class="waitlist-status">
+                        <p>🎉 You're on the waitlist! We'll notify you when Spaecs launches.</p>
+                        <div class="progress-indicator">
+                            <div class="progress-bar" style="width: 65%;"></div>
+                        </div>
+                        <p class="progress-text">Position: <strong>#1,234</strong> of 5,432 founders</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Unauthenticated State -->
+    <div id="unauthenticated" style="display: none;">
+        <div class="protected-message">
+            <h2>Please Sign In</h2>
+            <p>You need to be signed in to access the dashboard.</p>
+            <a href="sign-in.html" class="btn btn-primary">Sign In</a>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script>
+        // Dashboard functionality
+        let currentUser = null;
+
+        window.addEventListener('load', async () => {
+            // Initialize Clerk
+            if (typeof window.Clerk === 'undefined') {
+                console.error('Clerk not loaded');
+                showUnauthenticated();
+                return;
+            }
+
+            try {
+                await window.Clerk.load({
+                    publishableKey: 'pk_test_cmVndWxhci1yYWNjb29uLTMuY2xlcmsuYWNjb3VudHMuZGV2JA'
+                });
+
+                // Check if user is authenticated
+                if (window.Clerk.user) {
+                    currentUser = window.Clerk.user;
+                    showDashboard();
+                    loadUserProfile();
+                } else {
+                    showUnauthenticated();
+                }
+
+                // Listen for auth changes
+                window.Clerk.addListener((state) => {
+                    if (state.user) {
+                        currentUser = state.user;
+                        showDashboard();
+                        loadUserProfile();
+                    } else {
+                        showUnauthenticated();
+                    }
+                });
+
+            } catch (error) {
+                console.error('Error initializing Clerk:', error);
+                showUnauthenticated();
+            }
+        });
+
+        function showDashboard() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            document.getElementById('unauthenticated').style.display = 'none';
+
+            // Update user menu
+            const userMenuContainer = document.getElementById('userMenuContainer');
+            if (userMenuContainer && currentUser) {
+                userMenuContainer.innerHTML = `
+                    <div class="user-menu">
+                        <img src="${currentUser.imageUrl || 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + currentUser.id}" alt="Profile" class="user-avatar">
+                        <span class="user-name">${currentUser.firstName || 'User'}</span>
+                        <button onclick="handleSignOut()" class="btn btn-secondary btn-sm">Sign Out</button>
+                    </div>
+                `;
+            }
+
+            // Update welcome message
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            if (welcomeMessage && currentUser) {
+                welcomeMessage.innerHTML = `
+                    <h1>Welcome back, ${currentUser.firstName || 'Founder'}! 👋</h1>
+                    <p>Here's your community dashboard. Spaecs is coming soon!</p>
+                `;
+            }
+        }
+
+        function showUnauthenticated() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('unauthenticated').style.display = 'block';
+        }
+
+        async function loadUserProfile() {
+            if (!currentUser || !window.supabase) return;
+
+            try {
+                // Fetch profile from Supabase
+                const { data, error } = await window.supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', currentUser.id)
+                    .single();
+
+                const profileInfo = document.getElementById('profileInfo');
+                if (profileInfo) {
+                    if (error || !data) {
+                        profileInfo.innerHTML = `
+                            <div class="profile-details">
+                                <p><strong>Email:</strong> ${currentUser.primaryEmailAddress?.emailAddress || 'N/A'}</p>
+                                <p><strong>Name:</strong> ${currentUser.fullName || 'N/A'}</p>
+                                <p><strong>Joined:</strong> ${new Date(currentUser.createdAt).toLocaleDateString()}</p>
+                                <p class="profile-note">Profile sync pending...</p>
+                            </div>
+                        `;
+                    } else {
+                        profileInfo.innerHTML = `
+                            <div class="profile-details">
+                                <p><strong>Email:</strong> ${data.email}</p>
+                                <p><strong>Name:</strong> ${data.full_name || data.first_name + ' ' + data.last_name}</p>
+                                <p><strong>Username:</strong> ${data.username || 'Not set'}</p>
+                                <p><strong>Last Login:</strong> ${new Date(data.last_login_at).toLocaleDateString()}</p>
+                            </div>
+                        `;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+
+        async function handleSignOut() {
+            try {
+                await window.Clerk.signOut();
+                window.location.href = '/';
+            } catch (error) {
+                console.error('Error signing out:', error);
+            }
+        }
+    </script>
+
+    <style>
+        /* Dashboard Specific Styles */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .dashboard-card {
+            background: var(--bg-white);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-card h2 {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .dashboard-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .stats-preview {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            display: block;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .profile-details p {
+            margin-bottom: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .profile-details strong {
+            color: var(--text-primary);
+        }
+
+        .profile-note {
+            font-style: italic;
+            color: var(--accent);
+            margin-top: 1rem;
+        }
+
+        .waitlist-status {
+            text-align: center;
+        }
+
+        .progress-indicator {
+            width: 100%;
+            height: 20px;
+            background: var(--bg-light);
+            border-radius: 10px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            color: var(--text-secondary);
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+    </style>
+</body>
+</html>
